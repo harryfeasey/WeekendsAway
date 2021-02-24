@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Process
 import android.provider.Settings
 import android.util.Log
+import android.view.View.inflate
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -19,22 +20,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setupPermissions()
-    }
-
-    private fun setupPermissions() {
-        val permission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.PACKAGE_USAGE_STATS)
-
-        //Check if permission enabled
-        var appOpsManager: AppOpsManager = this.applicationContext.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-        val mode = appOpsManager.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, Process.myUid(), this.packageName)
-        val granted = mode == AppOpsManager.MODE_ALLOWED
+        val granted = checkPermissions()
 
         if (!granted) {
-            Log.i("main", "Permission to get stats denied")
-            startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+            //Navigate to screen explaining why it should be enabled, with button to bring up settings.
+            val dialogFragment = UsageStatsPermissionFragment()
+            dialogFragment.show(supportFragmentManager, "main")
+
         }
+    }
+
+    fun checkPermissions(): Boolean {
+
+        //Check if permission enabled
+        var appOpsManager: AppOpsManager =
+            this.applicationContext.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+        val mode = appOpsManager.unsafeCheckOpNoThrow(
+            AppOpsManager.OPSTR_GET_USAGE_STATS,
+            Process.myUid(),
+            this.packageName
+        )
+        val granted = mode == AppOpsManager.MODE_ALLOWED
+        return granted
     }
 }
 

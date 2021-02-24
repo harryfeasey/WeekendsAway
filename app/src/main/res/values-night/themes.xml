@@ -2,9 +2,9 @@
     <!-- Base application theme. -->
     <style name="Theme.WeekendsAway" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimary">@color/tenne_tawny</item>
         <item name="colorPrimaryVariant">@color/blackbean</item>
-        <item name="colorOnPrimary">@color/royalblue</item>
+        <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/royalblue</item>
         <item name="colorSecondaryVariant">@color/midnightblue</item>
@@ -13,5 +13,10 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/darksienna</item>
+    </style>
+    <style name="DialogTheme" parent="Theme.WeekendsAway">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">false</item>
     </style>
 </resources>
