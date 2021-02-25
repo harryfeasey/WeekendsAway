@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/tenne_tawny</item>
         <item name="colorPrimaryVariant">@color/blackbean</item>
         <item name="colorOnPrimary">@color/black</item>
+        <item name="colorSurface">@color/darksienna</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/royalblue</item>
         <item name="colorSecondaryVariant">@color/midnightblue</item>
