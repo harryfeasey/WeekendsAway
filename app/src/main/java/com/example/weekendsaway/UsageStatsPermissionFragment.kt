@@ -39,6 +39,7 @@ class UsageStatsPermissionFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+
         val enableButton = view.findViewById<Button>(R.id.enableButton)
         enableButton.setOnClickListener{
 
@@ -54,5 +55,15 @@ class UsageStatsPermissionFragment : DialogFragment() {
 
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("frag","onResume Called")
+        val granted = MainActivity.PermissionManager.checkPermissions(activity?.applicationContext, activity?.packageName)
+        if (granted) {
+            dismiss()
+        }
+    }
+
 
 }
