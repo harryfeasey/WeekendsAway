@@ -7,9 +7,12 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Process
 import android.util.Log
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weekendsaway.MainActivity.PermissionManager.checkPermissions
+import com.example.weekendsaway.MainActivity.UsageTools.getDailyStats
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,28 +33,61 @@ class MainActivity : AppCompatActivity() {
         }
 
         mUsageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-        printUsageStats(getDailyStats())
+        var use = UsageTools.getDayUse(getDailyStats(mUsageStatsManager))
+        findViewById<TextView>(R.id.usesCount).text = UsageTools.dayUseAsString(use)
 
 
     }
 
-    fun getDailyStats(): List<UsageStats>{
-        val cal: Calendar = Calendar.getInstance()
-        cal.add(Calendar.DAY_OF_WEEK, -1)
-        val queryUsageStats: List<UsageStats> = mUsageStatsManager
-                .queryUsageStats(UsageStatsManager.INTERVAL_DAILY, cal.getTimeInMillis(),
-                        System.currentTimeMillis())
-
-        return queryUsageStats;
-    }
 
 
-    fun printUsageStats(usageStatsList: List<UsageStats>) {
-        for (u in usageStatsList) {
-            Log.d("TAG", "Pkg: " + u.packageName + "\t" + "ForegroundTime: "
-                    + u.totalTimeInForeground)
+    object UsageTools {
+
+        fun getDailyStats(mUsageStatsManager: UsageStatsManager): List<UsageStats>{
+            val cal: Calendar = Calendar.getInstance()
+            cal.add(Calendar.DAY_OF_WEEK, -1)
+            val queryUsageStats: List<UsageStats> = mUsageStatsManager
+                    .queryUsageStats(UsageStatsManager.INTERVAL_DAILY, cal.getTimeInMillis(),
+                            System.currentTimeMillis())
+
+            return queryUsageStats;
         }
+
+
+        fun printUsageStats(usageStatsList: List<UsageStats>) {
+            for (u in usageStatsList) {
+                Log.d("TAG", "Pkg: " + u.packageName + "\t" + "ForegroundTime: "
+                        + u.totalTimeInForeground)
+            }
+        }
+
+
+        fun getDayUse(daysUsageStatsList: List<UsageStats>):Long{
+
+            var use:Long = 0
+
+            for (u in daysUsageStatsList) {
+
+                use += u.totalTimeInForeground
+
+            }
+            return use
+        }
+
+        fun dayUseAsString(millis:Long):String{
+
+            val hms = java.lang.String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+                    TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                    TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)))
+            return hms
+        }
+
+
+
+
     }
+
+
 
 
     object PermissionManager {
